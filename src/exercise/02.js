@@ -1,7 +1,7 @@
 // useCallback: custom hooks
 // http://localhost:3000/isolated/exercise/02.js
 
-import React from 'react'
+import React, {useCallback} from 'react'
 import {
   fetchPokemon,
   PokemonForm,
@@ -27,7 +27,8 @@ function asyncReducer(state, action) {
   }
 }
 
-function useAsync(asyncCallback, initialState, dependencies) {
+// function useAsync(asyncCallback, initialState, dependencies) {
+function useAsync(asyncCallback, initialState) {
   const [state, dispatch] = React.useReducer(asyncReducer, {
     ...(typeof initialState === 'function' ? initialState() : initialState),
     data: null,
@@ -35,6 +36,7 @@ function useAsync(asyncCallback, initialState, dependencies) {
   })
 
   React.useEffect(() => {
+    console.log('lefut')
     const promise = asyncCallback()
     if (!promise) {
       return
@@ -47,23 +49,21 @@ function useAsync(asyncCallback, initialState, dependencies) {
         dispatch({type: 'rejected', error})
       },
     )
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, dependencies)
+  }, [asyncCallback])
 
   return state
 }
 
 function PokemonInfo({pokemonName}) {
   const state = useAsync(
-    () => {
+    useCallback(() => {
       if (!pokemonName) {
         return
       }
       return fetchPokemon(pokemonName)
-    },
+    }, [pokemonName]),
     {status: pokemonName ? 'pending' : 'idle'},
-    [pokemonName],
+    // [pokemonName],
   )
 
   const {data, status, error} = state
