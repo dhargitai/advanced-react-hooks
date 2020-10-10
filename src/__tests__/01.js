@@ -2,8 +2,8 @@ import React from 'react'
 import chalk from 'chalk'
 import {render} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import App from '../final/01'
-// import App from '../exercise/01'
+// import App from '../final/01'
+import App from '../exercise/01'
 
 test('clicking the button increments the count', () => {
   const {container} = render(<App />)
