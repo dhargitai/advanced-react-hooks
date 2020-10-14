@@ -32,10 +32,16 @@
 
 - You should be experienced with `useState`, `useEffect`, and `useRef`.
 
+## Additional Resources
+
+- Videos
+  [Getting Closure on React Hooks by Shaen Wang](https://www.youtube.com/watch?v=KJP1E-Y-xyo)
+  (26 minutes)
+
 ## System Requirements
 
 - [git][git] v2.13 or greater
-- [NodeJS][node] v10.13 or greater
+- [NodeJS][node] `^10.13 || 12 || 14`
 - [npm][npm] v6 or greater
 
 All of these must be available in your `PATH`. To verify things are set up
@@ -53,13 +59,17 @@ variable and how to fix it here for [windows][win-path] or
 
 ## Setup
 
+> If you want to commit and push your work as you go, you'll want to
+> [fork](https://docs.github.com/en/free-pro-team@latest/github/getting-started-with-github/fork-a-repo)
+> first and then clone your fork rather than this repo directly.
+
 After you've made sure to have the correct things (and versions) installed, you
 should be able to just run a few commands to get set up:
 
 ```
 git clone https://github.com/kentcdodds/advanced-react-hooks.git
 cd advanced-react-hooks
-npm run setup --silent
+node setup
 ```
 
 This may take a few minutes. **It will ask you for your email.** This is
@@ -70,6 +80,12 @@ If you get any errors, please read through them and see if you can find out what
 the problem is. If you can't work it out on your own then please [file an
 issue][issue] and provide _all_ the output from the commands you ran (even if
 it's a lot).
+
+It's recommended you run everything locally in the same environment you work in
+every day, but if you're having issues getting things set up, you can also set
+this up using [GitHub Codespaces](https://github.com/features/codespaces)
+([video demo](https://www.youtube.com/watch?v=gCoVJm3hGk4)) or
+[Codesandbox](https://codesandbox.io/s/github/kentcdodds/advanced-react-hooks).
 
 ## Running the app
 
@@ -172,11 +188,14 @@ Thanks goes to these wonderful people
     <td align="center"><a href="http://peter.hozak.info/"><img src="https://avatars0.githubusercontent.com/u/1087670?v=4" width="100px;" alt=""/><br /><sub><b>Peter Hozák</b></sub></a><br /><a href="https://github.com/kentcdodds/advanced-react-hooks/commits?author=Aprillion" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/joemaffei"><img src="https://avatars1.githubusercontent.com/u/9068746?v=4" width="100px;" alt=""/><br /><sub><b>Joe Maffei</b></sub></a><br /><a href="https://github.com/kentcdodds/advanced-react-hooks/commits?author=joemaffei" title="Documentation">📖</a></td>
     <td align="center"><a href="https://magrippis.com"><img src="https://avatars0.githubusercontent.com/u/3502800?v=4" width="100px;" alt=""/><br /><sub><b>Johnny Magrippis</b></sub></a><br /><a href="https://github.com/kentcdodds/advanced-react-hooks/commits?author=jmagrippis" title="Code">💻</a></td>
+    <td align="center"><a href="http://blog.rphuber.com"><img src="https://avatars0.githubusercontent.com/u/8245890?v=4" width="100px;" alt=""/><br /><sub><b>Ryan Huber</b></sub></a><br /><a href="https://github.com/kentcdodds/advanced-react-hooks/commits?author=rphuber" title="Documentation">📖</a> <a href="https://github.com/kentcdodds/advanced-react-hooks/commits?author=rphuber" title="Code">💻</a></td>
+    <td align="center"><a href="https://dominicchapman.com"><img src="https://avatars2.githubusercontent.com/u/7607007?v=4" width="100px;" alt=""/><br /><sub><b>Dominic Chapman</b></sub></a><br /><a href="https://github.com/kentcdodds/advanced-react-hooks/commits?author=dominicchapman" title="Documentation">📖</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the
@@ -196,7 +215,7 @@ Thank you! https://kcd.im/arh-ws-feedback
 [node]: https://nodejs.org
 [git]: https://git-scm.com/
 [build-badge]: https://img.shields.io/travis/kentcdodds/advanced-react-hooks.svg?style=flat-square&logo=travis
-[build]: https://travis-ci.org/kentcdodds/advanced-react-hooks
+[build]: https://travis-ci.com/kentcdodds/advanced-react-hooks
 [license-badge]: https://img.shields.io/badge/license-GPL%203.0%20License-blue.svg?style=flat-square
 [license]: https://github.com/kentcdodds/advanced-react-hooks/blob/main/LICENSE
 [coc-badge]: https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square
