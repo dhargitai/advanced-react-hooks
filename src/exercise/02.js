@@ -33,18 +33,33 @@ function useAsync(initialState) {
     data: null,
     error: null,
   })
+  const abortControllerReference = React.useRef(new AbortController())
+
+  React.useEffect(() => {
+    const controller = abortControllerReference.current
+
+    return () => {
+      controller.abort()
+    }
+  }, [])
 
   return {
     ...state,
-    run: useCallback(asyncCallback => {
+    run: useCallback((asyncCallbackFunction, options = {}) => {
       dispatch({type: 'pending'})
+      const optionsWithSignal = {
+        ...options,
+        signal: abortControllerReference.current.signal,
+      }
 
-      asyncCallback.then(
+      asyncCallbackFunction.call(null, optionsWithSignal).then(
         data => {
           dispatch({type: 'resolved', data})
         },
         error => {
-          dispatch({type: 'rejected', error})
+          if (error?.name !== 'AbortError') {
+            dispatch({type: 'rejected', error})
+          }
         },
       )
     }, []),
@@ -61,7 +76,7 @@ function PokemonInfo({pokemonName}) {
       return
     }
 
-    return run(fetchPokemon(pokemonName))
+    return run(fetchPokemon, {name: pokemonName})
   }, [pokemonName, run])
 
   if (status === 'idle' || !pokemonName) {
@@ -79,6 +94,7 @@ function PokemonInfo({pokemonName}) {
 
 function App() {
   const [pokemonName, setPokemonName] = React.useState('')
+  const [removed, setRemoved] = React.useState(false)
 
   function handleSubmit(newPokemonName) {
     setPokemonName(newPokemonName)
@@ -91,12 +107,17 @@ function App() {
   return (
     <div className="pokemon-info-app">
       <PokemonForm pokemonName={pokemonName} onSubmit={handleSubmit} />
+      <button onClick={() => setRemoved(!removed)}>
+        "navigate" to {removed ? 'fetchpage' : 'elsewhere'}
+      </button>
       <hr />
-      <div className="pokemon-info">
-        <PokemonErrorBoundary onReset={handleReset} resetKeys={[pokemonName]}>
-          <PokemonInfo pokemonName={pokemonName} />
-        </PokemonErrorBoundary>
-      </div>
+      {!removed && (
+        <div className="pokemon-info">
+          <PokemonErrorBoundary onReset={handleReset} resetKeys={[pokemonName]}>
+            <PokemonInfo pokemonName={pokemonName} />
+          </PokemonErrorBoundary>
+        </div>
+      )}
     </div>
   )
 }
