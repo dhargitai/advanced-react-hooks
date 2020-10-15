@@ -33,31 +33,29 @@ function useAsync(initialState) {
     data: null,
     error: null,
   })
-  const abortControllerReference = React.useRef(new AbortController())
+  const isUnmounted = React.useRef()
 
   React.useEffect(() => {
-    const controller = abortControllerReference.current
+    isUnmounted.current = false
 
     return () => {
-      controller.abort()
+      isUnmounted.current = true
     }
   }, [])
 
   return {
     ...state,
-    run: useCallback((asyncCallbackFunction, options = {}) => {
+    run: useCallback(asyncCallback => {
       dispatch({type: 'pending'})
-      const optionsWithSignal = {
-        ...options,
-        signal: abortControllerReference.current.signal,
-      }
 
-      asyncCallbackFunction.call(null, optionsWithSignal).then(
+      asyncCallback.then(
         data => {
-          dispatch({type: 'resolved', data})
+          if (!isUnmounted.current) {
+            dispatch({type: 'resolved', data})
+          }
         },
         error => {
-          if (error?.name !== 'AbortError') {
+          if (!isUnmounted.current) {
             dispatch({type: 'rejected', error})
           }
         },
@@ -76,7 +74,7 @@ function PokemonInfo({pokemonName}) {
       return
     }
 
-    return run(fetchPokemon, {name: pokemonName})
+    return run(fetchPokemon(pokemonName))
   }, [pokemonName, run])
 
   if (status === 'idle' || !pokemonName) {
