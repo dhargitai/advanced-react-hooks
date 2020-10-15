@@ -27,12 +27,7 @@ function asyncReducer(state, action) {
   }
 }
 
-function useAsync(initialState) {
-  const [state, dispatch] = React.useReducer(asyncReducer, {
-    ...(typeof initialState === 'function' ? initialState() : initialState),
-    data: null,
-    error: null,
-  })
+function useSafeDispatch(unsafeDispatch) {
   const isUnmounted = React.useRef()
 
   React.useEffect(() => {
@@ -43,24 +38,42 @@ function useAsync(initialState) {
     }
   }, [])
 
+  return React.useCallback(
+    action => {
+      if (!isUnmounted.current) {
+        unsafeDispatch(action)
+      }
+    },
+    [unsafeDispatch],
+  )
+}
+
+function useAsync(initialState) {
+  const [state, unsafeDispatch] = React.useReducer(asyncReducer, {
+    ...(typeof initialState === 'function' ? initialState() : initialState),
+    data: null,
+    error: null,
+  })
+
+  const dispatch = useSafeDispatch(unsafeDispatch)
+
   return {
     ...state,
-    run: useCallback(asyncCallback => {
-      dispatch({type: 'pending'})
+    run: useCallback(
+      asyncCallback => {
+        dispatch({type: 'pending'})
 
-      asyncCallback.then(
-        data => {
-          if (!isUnmounted.current) {
+        asyncCallback.then(
+          data => {
             dispatch({type: 'resolved', data})
-          }
-        },
-        error => {
-          if (!isUnmounted.current) {
+          },
+          error => {
             dispatch({type: 'rejected', error})
-          }
-        },
-      )
-    }, []),
+          },
+        )
+      },
+      [dispatch],
+    ),
   }
 }
 
