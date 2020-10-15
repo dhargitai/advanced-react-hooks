@@ -28,20 +28,21 @@ function asyncReducer(state, action) {
 }
 
 function useSafeDispatch(unsafeDispatch) {
-  const isUnmounted = React.useRef()
+  const isMounted = React.useRef()
 
-  React.useEffect(() => {
-    isUnmounted.current = false
+  // to ensure it is called as soon as the component is mounted, before the browser painted anything onto the screen
+  React.useLayoutEffect(() => {
+    isMounted.current = true
 
     return () => {
-      isUnmounted.current = true
+      isMounted.current = false
     }
   }, [])
 
   return React.useCallback(
-    action => {
-      if (!isUnmounted.current) {
-        unsafeDispatch(action)
+    (...args) => {
+      if (isMounted.current) {
+        unsafeDispatch(...args)
       }
     },
     [unsafeDispatch],
