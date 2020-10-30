@@ -6,7 +6,10 @@ import React from 'react'
 function useMedia(query, initialState = false) {
   const [state, setState] = React.useState(initialState)
 
-  React.useDebugValue(`\`${query}\` => ${state}`)
+  React.useDebugValue({query, state}, ({query, state}) => {
+    console.log('Now the debug value is calculated...')
+    return `"${query}" => "${state}"`
+  })
 
   React.useEffect(() => {
     let mounted = true
